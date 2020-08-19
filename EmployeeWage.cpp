@@ -2,16 +2,25 @@
 #include <fstream>
 using namespace std;
 
-void saveWage(int day, int wage) {
+struct empInfo{
+	string empName;
+	string month;
+	int monthlyWage;
+};
+
+void saveWage(int wage,int month, string name) {
 	fstream fileStream;
-   fileStream.open("WageRecords.txt", ios::out | ios::app);
+	fileStream.open("WageRecords.txt", ios::out | ios::app);
    if(fileStream.is_open()) {
-      fileStream << day <<" " << wage << endl;
+      fileStream << wage << " " << month << " " << name << endl;
       fileStream.close();
   	}
 }
 
-int main() {
+int  wageCalculator(string name,int month) {
+	struct empInfo emp;
+	emp.empName = name;
+	emp.month = month;
 	const int WAGE_PER_HOUR = 20;
 	const int IS_FULL_TIME = 1;
 	const int IS_PART_TIME = 2;
@@ -35,11 +44,18 @@ int main() {
 		dailyWage = hour * WAGE_PER_HOUR;
 		totalWage += dailyWage;
 		totalWorkHours += hour;
-		saveWage(day,dailyWage);
+		emp.monthlyWage =totalWage;
 
 		if(totalWorkHours == 100) {
          cout << "\nWage for month = " << totalWage;
+      	saveWage(totalWage, month, name);
          return 0;
       }
 	}
+	return 0;
+}
+
+int main() {
+	wageCalculator("raj",2);
+	wageCalculator("ram",4);
 }
