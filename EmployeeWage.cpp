@@ -6,6 +6,7 @@ using namespace std;
 struct empInfo{
 	string empName;
 	string month;
+	string companyName;
 	int monthlyWage;
 };
 
@@ -21,8 +22,11 @@ void saveWage(int wage,int month, string name, string company) {
 
 int  wageCalculator(string name, int month, string companyName, int wage, int workDays, int monthlyHrs) {
 	struct empInfo emp;
+
 	emp.empName = name;
 	emp.month = month;
+	emp.companyName = companyName;
+
 	int WAGE_PER_HOUR = wage;
 	const int IS_FULL_TIME = 1;
 	const int IS_PART_TIME = 2;
@@ -44,17 +48,18 @@ int  wageCalculator(string name, int month, string companyName, int wage, int wo
 				hour = 0;
 				break;
 		}
+
 		dailyWage = hour * WAGE_PER_HOUR;
 		totalWage += dailyWage;
 		totalWorkHours += hour;
 		emp.monthlyWage = totalWage;
 
 		if(totalWorkHours == totalMonthHrs) {
-         cout << "\nWage for month = " << totalWage;
       	saveWage(totalWage, month, name, companyName);
          return 0;
       }
 	}
+
 	return 0;
 }
 
@@ -79,6 +84,7 @@ int calculateWages(string line , string name, int monthNum) {
    }
 
    words[counter] = word;
+
 	if(name == words[2] && monthNum == stoi(words[1])) {
 		return stoi(words[0]);
 	}
@@ -99,6 +105,7 @@ int readLineData(string name, int monthNum) {
       }
       fileStream.close();
   	}
+
   	return totalWages;
 }
 
@@ -109,12 +116,13 @@ int calcMonthlyWage(string name, int monthNum) {
 
 
 int main() {
-//	remove("WageRecords.txt");
+	remove("WageRecords.txt");
  	wageCalculator("ram", 2, "Dmart", 20, 60, 48);
 	wageCalculator("rahul", 4,"Kmart", 20, 65, 64);
+	wageCalculator("rahul", 4,"kl", 20, 65, 64);
 
 	int option;
-	cout << "-------------------OPTION-------------------------";
+	cout << "\n-------------------OPTION-------------------------";
 	cout << "\n 1) Calculate wage for m = ";
 	cout << "\n Enter Option = ";
 	cin >> option;
