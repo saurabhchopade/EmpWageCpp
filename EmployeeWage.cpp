@@ -1,4 +1,5 @@
 #include <iostream>
+#include <bits/stdc++.h> 
 #include <fstream>
 using namespace std;
 
@@ -55,7 +56,88 @@ int  wageCalculator(string name,int month) {
 	return 0;
 }
 
+
+int calculateWages(string line , string name, int monthNum) {
+	string words[3];
+	int counter =0;
+	string word = "";
+
+   for (auto x : line)
+   {
+       if (x == ' ')
+       {
+         words[counter] = word;
+         counter++;
+           word = "";
+       }
+       else
+       {
+           word = word + x;
+       }
+   }
+
+   words[counter] = word;
+	if(name == words[2] && monthNum == stoi(words[1])) {
+		return stoi(words[0]);
+	}
+	return 0;
+}
+
+
+int readLineData(string name, int monthNum) {
+	string line;
+   int totalWages = 0;
+   fstream fileStream("WageRecords.txt", ios::in);
+
+   if(fileStream.is_open()) {
+   	cout << "File is opened for reading" << endl;
+
+    	while ( getline (fileStream, line) ) {
+      	totalWages += calculateWages(line,name,monthNum);
+      }
+      fileStream.close();
+  	}
+  	return totalWages;
+}
+
+
+int calcMonthlyWage(string name, int monthNum) {
+	return readLineData(name, monthNum);
+}
+
+
 int main() {
-	wageCalculator("raj",2);
-	wageCalculator("ram",4);
+	remove("WageRecords.txt");
+ 	wageCalculator("ram", 2);
+	wageCalculator("ram", 4);
+
+	int option;
+	cout << "-------------------OPTION-------------------------";
+	cout << "\n 1) Calculate wage for m = ";
+	cout << "\n Enter Option = ";
+	cin >> option;
+
+	switch(option) {
+		case 1:{
+			char check;
+			int totalWages = 0;
+			do {
+				int monthNum;
+				string name;
+				cout << "\n Enter empName = ";
+         	cin >> name;
+				cout << "\n Enter Month Number = ";
+				cin >> monthNum;
+				totalWages += calcMonthlyWage(name, monthNum);
+				cout<<"\n Do want to calculate another month press (Y)";
+				cin >> check;
+			}
+			while(check == 'y');
+			cout <<"totalWages = " <<totalWages;
+			break;
+		}
+		default :{
+			cout << "Enter Valid optiom";
+		}
+	}
 }
