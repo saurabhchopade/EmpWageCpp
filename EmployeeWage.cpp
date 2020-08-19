@@ -9,23 +9,25 @@ struct empInfo{
 	int monthlyWage;
 };
 
-void saveWage(int wage,int month, string name) {
+void saveWage(int wage,int month, string name, string company) {
 	fstream fileStream;
 	fileStream.open("WageRecords.txt", ios::out | ios::app);
+
    if(fileStream.is_open()) {
-      fileStream << wage << " " << month << " " << name << endl;
+      fileStream << wage << " " << month << " " << name << " " << company << endl;
       fileStream.close();
   	}
 }
 
-int  wageCalculator(string name,int month) {
+int  wageCalculator(string name, int month, string companyName, int wage, int workDays, int monthlyHrs) {
 	struct empInfo emp;
 	emp.empName = name;
 	emp.month = month;
-	const int WAGE_PER_HOUR = 20;
+	int WAGE_PER_HOUR = wage;
 	const int IS_FULL_TIME = 1;
 	const int IS_PART_TIME = 2;
-	const int WORKING_DAYS = 100;
+	int WORKING_DAYS = workDays;
+	int totalMonthHrs = monthlyHrs;
 	int hour, status, totalWage = 0,totalWorkHours = 0,dailyWage = 0;
 	srand(time(NULL));
 
@@ -36,7 +38,7 @@ int  wageCalculator(string name,int month) {
 				hour = 8;
 				break;
 			case IS_PART_TIME :
-				hour = 4;
+				hour = 8;
 				break;
 			default :
 				hour = 0;
@@ -45,11 +47,11 @@ int  wageCalculator(string name,int month) {
 		dailyWage = hour * WAGE_PER_HOUR;
 		totalWage += dailyWage;
 		totalWorkHours += hour;
-		emp.monthlyWage =totalWage;
+		emp.monthlyWage = totalWage;
 
-		if(totalWorkHours == 100) {
+		if(totalWorkHours == totalMonthHrs) {
          cout << "\nWage for month = " << totalWage;
-      	saveWage(totalWage, month, name);
+      	saveWage(totalWage, month, name, companyName);
          return 0;
       }
 	}
@@ -58,8 +60,8 @@ int  wageCalculator(string name,int month) {
 
 
 int calculateWages(string line , string name, int monthNum) {
-	string words[3];
-	int counter =0;
+	string words[4];
+	int counter = 0;
 	string word = "";
 
    for (auto x : line)
@@ -93,7 +95,7 @@ int readLineData(string name, int monthNum) {
    	cout << "File is opened for reading" << endl;
 
     	while ( getline (fileStream, line) ) {
-      	totalWages += calculateWages(line,name,monthNum);
+      	totalWages += calculateWages(line, name, monthNum);
       }
       fileStream.close();
   	}
@@ -107,9 +109,9 @@ int calcMonthlyWage(string name, int monthNum) {
 
 
 int main() {
-	remove("WageRecords.txt");
- 	wageCalculator("ram", 2);
-	wageCalculator("ram", 4);
+//	remove("WageRecords.txt");
+ 	wageCalculator("ram", 2, "Dmart", 20, 60, 48);
+	wageCalculator("rahul", 4,"Kmart", 20, 65, 64);
 
 	int option;
 	cout << "-------------------OPTION-------------------------";
@@ -129,11 +131,12 @@ int main() {
 				cout << "\n Enter Month Number = ";
 				cin >> monthNum;
 				totalWages += calcMonthlyWage(name, monthNum);
-				cout<<"\n Do want to calculate another month press (Y)";
+				cout << "\n Do want to calculate another month press (Y)";
 				cin >> check;
 			}
+
 			while(check == 'y');
-			cout <<"totalWages = " <<totalWages;
+			cout << " \n totalWages = " << totalWages;
 			break;
 		}
 		default :{

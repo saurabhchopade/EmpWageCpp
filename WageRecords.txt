@@ -1,2 +1,12 @@
-2000 2 ram
-2000 4 ram
+2000 2 ram Dmart
+2000 2 ram Dmart
+2000 4 rahul Kmart
+2000 2 ram Dmart
+2000 2 ram Dmart
+800 4 rahul Kmart
+800 4 rahul Kmart
+800 4 rahul Kmart
+2000 2 ram Dmart
+800 4 rahul Kmart
+960 2 ram Dmart
+1280 4 rahul Kmart
