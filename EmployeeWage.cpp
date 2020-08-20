@@ -22,12 +22,12 @@ void saveDailyWage(int wage, int totalWage, int month, string name, string compa
    }
 }
 
-void saveWage(int wage, int month, string name, string company) {
+void saveWage(int wage, int month, string name, string company,int d) {
 	fstream fileStream;
 	fileStream.open("WageRecords.txt", ios::out | ios::app);
 
    if(fileStream.is_open()) {
-      fileStream << wage << " " << month << " " << name << " " << company << endl;
+      fileStream << wage << " " << month << " " << name << " " << company << " " << d << endl;
       fileStream.close();
   	}
 }
@@ -59,10 +59,11 @@ int  empWageBuilder(CompanyEmpWage emp) {
 		dailyWage = hour * WAGE_PER_HOUR;
 		totalWage += dailyWage;
 		totalWorkHours += hour;
+
 		saveDailyWage(dailyWage, totalWage, emp.month, emp.empName, emp.companyName);
 
 		if(totalWorkHours == totalMonthHrs) {
-      	saveWage(totalWage, emp.month, emp.empName, emp.companyName);
+      	saveWage(totalWage, emp.month, emp.empName, emp.companyName, dailyWage);
          return 0;
       }
 	}
@@ -71,7 +72,7 @@ int  empWageBuilder(CompanyEmpWage emp) {
 }
 
 int calculateWages(string line , string name, int monthNum, string companyName) {
-	string words[4];
+	string words[5];
 	int counter = 0;
 	string word = "";
 
@@ -98,9 +99,8 @@ int calculateWages(string line , string name, int monthNum, string companyName) 
 }
 
 int getDataForSort(string line ,string companyName,  map<string, int> &map1) {
-   string words[4];
+   string words[5];
    int counter = 0;
-   string comp = companyName;
    string word = "";
 
    for (auto x : line)
@@ -124,6 +124,34 @@ int getDataForSort(string line ,string companyName,  map<string, int> &map1) {
    }
    return 0;
 }
+
+int getDataForDailyWageSort(string line ,int month, string companyName, map<string, int> &map1) {
+   string words[5];
+   int counter = 0;
+   string word = "";
+
+   for (auto x : line)
+   {
+       if (x == ' ')
+       {
+         words[counter] = word;
+         counter++;
+           word = "";
+       }
+       else
+       {
+           word = word + x;
+       }
+   }
+
+   words[counter] = word;
+	 string str = to_string(month);
+   if(str == words[1] && companyName == words[3]) {
+         map1.insert( { words[2], stoi(words[4]) });
+   }
+   return 0;
+}
+
 
 
 bool cmp(pair<string, int>& a,pair<string, int>& b)  {
@@ -162,10 +190,13 @@ int readLineData(string name, int monthNum, string companyName,int funNo) {
 			else if(funNo == 2) {
 				getDataForSort(line, companyName, map);
 			}
+			else if(funNo == 3) {
+				getDataForDailyWageSort(line, monthNum, companyName, map);
+			}
       }
       fileStream.close();
   	}
-  	if(funNo == 2) {
+  	if(funNo == 2|| funNo ==3) {
 		sort(map);
 		return 0;
   	}
@@ -178,22 +209,30 @@ int calcMonthlyWage(string name, int monthNum, string companyName) {
 }
 
 void sortByMonthlyWage(string companyName) {
-	  readLineData("dummy", 0, companyName,2);
+	  readLineData("0", 0, companyName,2);
 }
 
+void sortByDailyWage(int month, string companyName){
+		readLineData("0", month, companyName, 3);
+}
 int main() {
 	remove("DailyAndTotal.txt");
 	remove("WageRecords.txt");
-	struct CompanyEmpWage emp[4];
 
+	struct CompanyEmpWage emp[5];
+	//EmployeeName--month--company--Wage--WorkingDays--MonthlyHours
 	emp[0] = {"bob", 2, "Dmart", 20, 60, 48};
 	emp[1] = {"alice", 3, "Dmart", 20, 80, 80};
 	emp[2] = {"alia", 4, "Kmart", 20, 65, 64};
-	emp[3] = {"shantanu", 4, "Walmart", 20, 65, 64};
+	emp[3] = {"akash", 4, "Walmart", 15, 65, 64};
+	emp[4] = {"robin", 4, "Walmart", 10, 65, 32};
 
 	empWageBuilder(emp[0]);
 	empWageBuilder(emp[1]);
 	empWageBuilder(emp[2]);
+	empWageBuilder(emp[3]);
+   empWageBuilder(emp[4]);
+
 
 	int option;
 	cout << "\n-------------------OPTION-------------------------";
@@ -253,6 +292,18 @@ int main() {
          cin >> companyName;
 
 			sortByMonthlyWage(companyName);
+			break;
+		}
+		case 4:{
+			int month;
+			string companyName;
+
+			cout << "\n Enter CompanyName = ";
+         cin >> companyName;
+			cout<<"\n Enter Month Number = ";
+			cin >> month;
+
+			sortByDailyWage(month,companyName);
 			break;
 		}
 		default :{
