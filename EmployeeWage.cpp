@@ -3,11 +3,13 @@
 #include <fstream>
 using namespace std;
 
-struct empInfo{
+struct CompanyEmpWage{
 	string empName;
-	string month;
+	int month;
 	string companyName;
-	int monthlyWage;
+	int wage;
+	int workDays;
+	int monthlyHrs;
 };
 
 void saveWage(int wage,int month, string name, string company) {
@@ -20,18 +22,13 @@ void saveWage(int wage,int month, string name, string company) {
   	}
 }
 
-int  wageCalculator(string name, int month, string companyName, int wage, int workDays, int monthlyHrs) {
-	struct empInfo emp;
+int  empWageBuilder(CompanyEmpWage emp) {
 
-	emp.empName = name;
-	emp.month = month;
-	emp.companyName = companyName;
-
-	int WAGE_PER_HOUR = wage;
+	int WAGE_PER_HOUR = emp.wage;
 	const int IS_FULL_TIME = 1;
 	const int IS_PART_TIME = 2;
-	int WORKING_DAYS = workDays;
-	int totalMonthHrs = monthlyHrs;
+	int WORKING_DAYS = emp.workDays;
+	int totalMonthHrs = emp.monthlyHrs;
 	int hour, status, totalWage = 0,totalWorkHours = 0,dailyWage = 0;
 	srand(time(NULL));
 
@@ -52,10 +49,9 @@ int  wageCalculator(string name, int month, string companyName, int wage, int wo
 		dailyWage = hour * WAGE_PER_HOUR;
 		totalWage += dailyWage;
 		totalWorkHours += hour;
-		emp.monthlyWage = totalWage;
 
 		if(totalWorkHours == totalMonthHrs) {
-      	saveWage(totalWage, month, name, companyName);
+      	saveWage(totalWage, emp.month, emp.empName, emp.companyName);
          return 0;
       }
 	}
@@ -117,9 +113,15 @@ int calcMonthlyWage(string name, int monthNum) {
 
 int main() {
 	remove("WageRecords.txt");
- 	wageCalculator("ram", 2, "Dmart", 20, 60, 48);
-	wageCalculator("rahul", 4,"Kmart", 20, 65, 64);
-	wageCalculator("rahul", 4,"kl", 20, 65, 64);
+	struct CompanyEmpWage emp[3];
+
+	emp[0] = {"ram", 2, "Dmar111", 20, 60, 48};
+	emp[1] = {"rahul", 4, "Kmart", 20, 65, 64};
+	emp[2] = {"rahul", 4, "kl", 20, 65, 64};
+
+	empWageBuilder(emp[0]);
+	empWageBuilder(emp[1]);
+	empWageBuilder(emp[2]);
 
 	int option;
 	cout << "\n-------------------OPTION-------------------------";
