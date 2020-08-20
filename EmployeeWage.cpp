@@ -12,6 +12,17 @@ struct CompanyEmpWage{
 	int monthlyHrs;
 };
 
+
+void saveDailyWage(int wage, int totalWage, int month, string name, string company) {
+   fstream fileStream;
+   fileStream.open("DailyAndTotal.txt", ios::out | ios::app);
+
+   if(fileStream.is_open()) {
+      fileStream << wage << " " << totalWage << " " << month << " " << name << " " << company << endl;
+      fileStream.close();
+   }
+}
+
 void saveWage(int wage, int month, string name, string company) {
 	fstream fileStream;
 	fileStream.open("WageRecords.txt", ios::out | ios::app);
@@ -49,6 +60,7 @@ int  empWageBuilder(CompanyEmpWage emp) {
 		dailyWage = hour * WAGE_PER_HOUR;
 		totalWage += dailyWage;
 		totalWorkHours += hour;
+		saveDailyWage(dailyWage, totalWage, emp.month, emp.empName, emp.companyName);
 
 		if(totalWorkHours == totalMonthHrs) {
       	saveWage(totalWage, emp.month, emp.empName, emp.companyName);
@@ -111,12 +123,13 @@ int calcMonthlyWage(string name, int monthNum) {
 
 
 int main() {
+	remove("DailyAndTotal.txt");
 	remove("WageRecords.txt");
 	struct CompanyEmpWage emp[3];
 
-	emp[0] = {"ram", 2, "Dmar111", 20, 60, 48};
-	emp[1] = {"rahul", 4, "Kmart", 20, 65, 64};
-	emp[2] = {"rahul", 4, "kl", 20, 65, 64};
+	emp[0] = {"Alice", 2, "Dmart", 20, 60, 48};
+	emp[1] = {"Bob", 4, "Kmart", 20, 65, 64};
+	emp[2] = {"Shantanu", 4, "Walmart", 20, 65, 64};
 
 	empWageBuilder(emp[0]);
 	empWageBuilder(emp[1]);
