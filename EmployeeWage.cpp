@@ -12,7 +12,7 @@ struct CompanyEmpWage{
 	int monthlyHrs;
 };
 
-void saveWage(int wage,int month, string name, string company) {
+void saveWage(int wage, int month, string name, string company) {
 	fstream fileStream;
 	fileStream.open("WageRecords.txt", ios::out | ios::app);
 
@@ -29,7 +29,7 @@ int  empWageBuilder(CompanyEmpWage emp) {
 	const int IS_PART_TIME = 2;
 	int WORKING_DAYS = emp.workDays;
 	int totalMonthHrs = emp.monthlyHrs;
-	int hour, status, totalWage = 0,totalWorkHours = 0,dailyWage = 0;
+	int hour, status, totalWage = 0, totalWorkHours = 0, dailyWage = 0;
 	srand(time(NULL));
 
 	for(int day = 1; day <= WORKING_DAYS; day++) {
@@ -58,7 +58,6 @@ int  empWageBuilder(CompanyEmpWage emp) {
 
 	return 0;
 }
-
 
 int calculateWages(string line , string name, int monthNum) {
 	string words[4];
@@ -125,7 +124,7 @@ int main() {
 
 	int option;
 	cout << "\n-------------------OPTION-------------------------";
-	cout << "\n 1) Calculate wage for m = ";
+	cout << "\n 1) Calculate wage on the basis of Month = ";
 	cout << "\n Enter Option = ";
 	cin >> option;
 
