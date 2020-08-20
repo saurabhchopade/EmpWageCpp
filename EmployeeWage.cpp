@@ -1,5 +1,5 @@
 #include <iostream>
-#include <bits/stdc++.h> 
+#include <bits/stdc++.h>
 #include <fstream>
 using namespace std;
 
@@ -11,7 +11,6 @@ struct CompanyEmpWage{
 	int workDays;
 	int monthlyHrs;
 };
-
 
 void saveDailyWage(int wage, int totalWage, int month, string name, string company) {
    fstream fileStream;
@@ -98,37 +97,98 @@ int calculateWages(string line , string name, int monthNum, string companyName) 
 	return 0;
 }
 
+int getDataForSort(string line ,string companyName,  map<string, int> &map1) {
+   string words[4];
+   int counter = 0;
+   string comp = companyName;
+   string word = "";
 
-int readLineData(string name, int monthNum, string companyName) {
+   for (auto x : line)
+   {
+       if (x == ' ')
+       {
+         words[counter] = word;
+         counter++;
+           word = "";
+       }
+       else
+       {
+           word = word + x;
+       }
+   }
+
+   words[counter] = word;
+
+   if(companyName == words[3]) {
+      	map1.insert( { words[2], stoi(words[0]) });
+   }
+   return 0;
+}
+
+
+bool cmp(pair<string, int>& a,pair<string, int>& b)  {
+    return a.second < b.second;
+}
+
+void sort(map<string, int>& M)
+{
+    vector<pair<string, int> > A;
+
+    for (auto& it : M) {
+        A.push_back(it);
+    }
+
+    sort(A.begin(), A.end(), cmp);
+
+    for (auto& it : A) {
+
+        cout << it.first << ' '
+             << it.second << endl;
+    }
+}
+
+int readLineData(string name, int monthNum, string companyName,int funNo) {
 	string line;
    int totalWages = 0;
+   map<string, int> map;
    fstream fileStream("WageRecords.txt", ios::in);
 
    if(fileStream.is_open()) {
 
     	while ( getline (fileStream, line) ) {
-      	totalWages += calculateWages(line, name, monthNum, companyName);
+    		if(funNo == 1) {
+      		totalWages += calculateWages(line, name, monthNum, companyName);
+			}
+			else if(funNo == 2) {
+				getDataForSort(line, companyName, map);
+			}
       }
       fileStream.close();
   	}
-
-  	return totalWages;
+  	if(funNo == 2) {
+		sort(map);
+		return 0;
+  	}
+	return totalWages;
 }
 
 
 int calcMonthlyWage(string name, int monthNum, string companyName) {
-	return readLineData(name, monthNum, companyName);
+	return readLineData(name, monthNum, companyName,1);
 }
 
+void sortByMonthlyWage(string companyName) {
+	  readLineData("dummy", 0, companyName,2);
+}
 
 int main() {
 	remove("DailyAndTotal.txt");
 	remove("WageRecords.txt");
 	struct CompanyEmpWage emp[4];
 
-	emp[0] = {"alice", 2, "Dmart", 20, 60, 48};
+	emp[0] = {"bob", 2, "Dmart", 20, 60, 48};
 	emp[1] = {"alice", 3, "Dmart", 20, 80, 80};
-	emp[2] = {"bob", 4, "Kmart", 20, 65, 64};
+	emp[2] = {"alia", 4, "Kmart", 20, 65, 64};
 	emp[3] = {"shantanu", 4, "Walmart", 20, 65, 64};
 
 	empWageBuilder(emp[0]);
@@ -139,10 +199,12 @@ int main() {
 	cout << "\n-------------------OPTION-------------------------";
 	cout << "\n| 1) get wage for selected Month =                 |";
 	cout << "\n| 2) get total wage                                |";
+	cout << "\n| 3) Sort By monthly Wage                          |";
+	cout << "\n| 4) Sort By dailyWage                             |";
+   cout << "\n| 5) Find Employees based on Wage                  |";
 	cout << "\n--------------------------------------------------";
 	cout << "\n\n\n Enter Option = ";
 	cin >> option;
-
 	switch(option) {
 
 		case 1:{
@@ -182,6 +244,15 @@ int main() {
 				totalWages += calcMonthlyWage(empName, month, companyName);
 			}
 			cout << "\n EMPLYEE NAME = "<< empName << "\n COMPANY NAME = " << companyName << "\n TotalWage = " << totalWages << "\n";
+			break;
+		}
+		case 3:{
+			string companyName;
+
+         cout << "\n Enter companyName = ";
+         cin >> companyName;
+
+			sortByMonthlyWage(companyName);
 			break;
 		}
 		default :{
