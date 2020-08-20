@@ -105,7 +105,6 @@ int readLineData(string name, int monthNum) {
    fstream fileStream("WageRecords.txt", ios::in);
 
    if(fileStream.is_open()) {
-   	cout << "File is opened for reading" << endl;
 
     	while ( getline (fileStream, line) ) {
       	totalWages += calculateWages(line, name, monthNum);
@@ -125,11 +124,12 @@ int calcMonthlyWage(string name, int monthNum) {
 int main() {
 	remove("DailyAndTotal.txt");
 	remove("WageRecords.txt");
-	struct CompanyEmpWage emp[3];
+	struct CompanyEmpWage emp[4];
 
-	emp[0] = {"Alice", 2, "Dmart", 20, 60, 48};
-	emp[1] = {"Bob", 4, "Kmart", 20, 65, 64};
-	emp[2] = {"Shantanu", 4, "Walmart", 20, 65, 64};
+	emp[0] = {"alice", 2, "Dmart", 20, 60, 48};
+	emp[1] = {"alice", 3, "Dmart", 20, 80, 80};
+	emp[2] = {"bob", 4, "Kmart", 20, 65, 64};
+	emp[3] = {"shantanu", 4, "Walmart", 20, 65, 64};
 
 	empWageBuilder(emp[0]);
 	empWageBuilder(emp[1]);
@@ -137,18 +137,21 @@ int main() {
 
 	int option;
 	cout << "\n-------------------OPTION-------------------------";
-	cout << "\n 1) Calculate wage on the basis of Month = ";
-	cout << "\n Enter Option = ";
+	cout << "\n| 1) get wage for selected Month =                 |";
+	cout << "\n| 2) get total wage                                |";
+	cout << "\n--------------------------------------------------";
+	cout << "\n\n\n Enter Option = ";
 	cin >> option;
 
 	switch(option) {
+
 		case 1:{
 			char check;
 			int totalWages = 0;
 			do {
 				int monthNum;
 				string name;
-				cout << "\n Enter empName = ";
+				cout << "\n Enter Employee Name = ";
          	cin >> name;
 				cout << "\n Enter Month Number = ";
 				cin >> monthNum;
@@ -158,11 +161,28 @@ int main() {
 			}
 
 			while(check == 'y');
-			cout << " \n totalWages = " << totalWages;
+			cout << " \n TOTAL WAGE = " << totalWages;
+			break;
+		}
+
+		case 2:{
+			string companyName;
+			string empName;
+			int totalWages = 0;
+
+			cout << "\n Enter companyName = ";
+			cin >> companyName;
+			cout << "\n Enter Employee Name = ";
+			cin >> empName;
+
+			for(int month = 0; month< 12; month++){
+				totalWages += calcMonthlyWage(empName, month);
+			}
+			cout << "\n EMPLYEE NAME = "<< empName << "\n COMPANY NAME = " << companyName << "\n TotalWage = " << totalWages << "\n";
 			break;
 		}
 		default :{
-			cout << "Enter Valid optiom";
+			cout << "Enter Valid option";
 		}
 	}
 }
