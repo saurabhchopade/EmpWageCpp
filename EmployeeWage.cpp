@@ -71,7 +71,7 @@ int  empWageBuilder(CompanyEmpWage emp) {
 	return 0;
 }
 
-int calculateWages(string line , string name, int monthNum) {
+int calculateWages(string line , string name, int monthNum, string companyName) {
 	string words[4];
 	int counter = 0;
 	string word = "";
@@ -92,14 +92,14 @@ int calculateWages(string line , string name, int monthNum) {
 
    words[counter] = word;
 
-	if(name == words[2] && monthNum == stoi(words[1])) {
+	if(name == words[2] && monthNum == stoi(words[1]) && companyName == words[3]) {
 		return stoi(words[0]);
 	}
 	return 0;
 }
 
 
-int readLineData(string name, int monthNum) {
+int readLineData(string name, int monthNum, string companyName) {
 	string line;
    int totalWages = 0;
    fstream fileStream("WageRecords.txt", ios::in);
@@ -107,7 +107,7 @@ int readLineData(string name, int monthNum) {
    if(fileStream.is_open()) {
 
     	while ( getline (fileStream, line) ) {
-      	totalWages += calculateWages(line, name, monthNum);
+      	totalWages += calculateWages(line, name, monthNum, companyName);
       }
       fileStream.close();
   	}
@@ -116,8 +116,8 @@ int readLineData(string name, int monthNum) {
 }
 
 
-int calcMonthlyWage(string name, int monthNum) {
-	return readLineData(name, monthNum);
+int calcMonthlyWage(string name, int monthNum, string companyName) {
+	return readLineData(name, monthNum, companyName);
 }
 
 
@@ -147,21 +147,24 @@ int main() {
 
 		case 1:{
 			char check;
+			string name;
+			string companyName;
+			cout << "\n Enter Employee Name = ";
+         cin >> name;
+         cout << "\n Enter CompanyName = ";
+			cin >> companyName;
 			int totalWages = 0;
 			do {
 				int monthNum;
-				string name;
-				cout << "\n Enter Employee Name = ";
-         	cin >> name;
 				cout << "\n Enter Month Number = ";
 				cin >> monthNum;
-				totalWages += calcMonthlyWage(name, monthNum);
-				cout << "\n Do want to calculate another month press (Y)";
+				totalWages += calcMonthlyWage(name, monthNum,companyName);
+				cout << "\n PRESS (Y/N)";
 				cin >> check;
 			}
 
 			while(check == 'y');
-			cout << " \n TOTAL WAGE = " << totalWages;
+			cout << " \n TOTAL WAGE = " << totalWages << "\n";
 			break;
 		}
 
@@ -176,7 +179,7 @@ int main() {
 			cin >> empName;
 
 			for(int month = 0; month< 12; month++){
-				totalWages += calcMonthlyWage(empName, month);
+				totalWages += calcMonthlyWage(empName, month, companyName);
 			}
 			cout << "\n EMPLYEE NAME = "<< empName << "\n COMPANY NAME = " << companyName << "\n TotalWage = " << totalWages << "\n";
 			break;
