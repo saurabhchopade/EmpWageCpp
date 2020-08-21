@@ -1,5 +1,5 @@
-960 2 bob Dmart 160
-1600 3 alice Dmart 160
-1280 4 alia Kmart 160
-960 4 akash Walmart 120
-320 4 robin Walmart 80
+960 2 bob Dmart 160 20
+1600 3 alice Dmart 160 20
+1280 4 alia Kmart 160 20
+960 4 akash Walmart 120 15
+320 4 robin Walmart 80 10

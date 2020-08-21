@@ -17,17 +17,19 @@ void saveDailyWage(int wage, int totalWage, int month, string name, string compa
    fileStream.open("DailyAndTotal.txt", ios::out | ios::app);
 
    if(fileStream.is_open()) {
-      fileStream << wage << " " << totalWage << " " << month << " " << name << " " << company << endl;
+      fileStream << wage << " " << totalWage << " " << month << " " << name << " " << company << endl;  
       fileStream.close();
    }
 }
 
-void saveWage(int wage, int month, string name, string company,int d) {
+void saveWage(int wage, int month, string name, string company,int dailyWage,int wageRate) {
 	fstream fileStream;
 	fileStream.open("WageRecords.txt", ios::out | ios::app);
 
    if(fileStream.is_open()) {
-      fileStream << wage << " " << month << " " << name << " " << company << " " << d << endl;
+      fileStream << wage << " " << month << " " << name << " " << company << " " << dailyWage << " "<< wageRate << endl;
+		cout <<" \n \n " << " WAGE = " <<wage << " MONTH = " << month << " NAME = " << name << " Company = "<< company << " DailyWage = "
+		 << dailyWage << " WageRate = " << wageRate;
       fileStream.close();
   	}
 }
@@ -63,7 +65,7 @@ int  empWageBuilder(CompanyEmpWage emp) {
 		saveDailyWage(dailyWage, totalWage, emp.month, emp.empName, emp.companyName);
 
 		if(totalWorkHours == totalMonthHrs) {
-      	saveWage(totalWage, emp.month, emp.empName, emp.companyName, dailyWage);
+      	saveWage(totalWage, emp.month, emp.empName, emp.companyName, dailyWage, emp.wage);
          return 0;
       }
 	}
@@ -72,7 +74,7 @@ int  empWageBuilder(CompanyEmpWage emp) {
 }
 
 int calculateWages(string line , string name, int monthNum, string companyName) {
-	string words[5];
+	string words[6];
 	int counter = 0;
 	string word = "";
 
@@ -99,7 +101,7 @@ int calculateWages(string line , string name, int monthNum, string companyName) 
 }
 
 int getDataForSort(string line ,string companyName,  map<string, int> &map1) {
-   string words[5];
+   string words[6];
    int counter = 0;
    string word = "";
 
@@ -126,7 +128,7 @@ int getDataForSort(string line ,string companyName,  map<string, int> &map1) {
 }
 
 int getDataForDailyWageSort(string line ,int month, string companyName, map<string, int> &map1) {
-   string words[5];
+   string words[6];
    int counter = 0;
    string word = "";
 
@@ -145,20 +147,46 @@ int getDataForDailyWageSort(string line ,int month, string companyName, map<stri
    }
 
    words[counter] = word;
-	 string str = to_string(month);
-   if(str == words[1] && companyName == words[3]) {
+	string str = to_string(month);
+   if(str == words[1] /*&& companyName == words[3]*/) {
          map1.insert( { words[2], stoi(words[4]) });
    }
    return 0;
 }
 
+int getDataOnWageRateSort(string line , int wageRate, map<string, int> &map1) {
+   string words[6];
+   int counter = 0;
+   string word = "";
 
+   for (auto x : line)
+   {
+       if (x == ' ')
+       {
+         words[counter] = word;
+         counter++;
+         word = "";
+       }
+       else
+       {
+           word = word + x;
+       }
+   }
+
+   words[counter] = word;
+
+   string str = to_string(wageRate);
+   if(str == words[5]) {
+         map1.insert( { words[2], stoi(words[4]) });
+   }
+   return 0;
+}
 
 bool cmp(pair<string, int>& a,pair<string, int>& b)  {
     return a.second < b.second;
 }
 
-void sort(map<string, int>& M)
+int sort(map<string, int>& M)
 {
     vector<pair<string, int> > A;
 
@@ -173,9 +201,10 @@ void sort(map<string, int>& M)
         cout << it.first << ' '
              << it.second << endl;
     }
+	return 0;
 }
 
-int readLineData(string name, int monthNum, string companyName,int funNo) {
+int readLineData(string name, int monthNum, string companyName, int funNo, int wageRate) {
 	string line;
    int totalWages = 0;
    map<string, int> map;
@@ -193,28 +222,37 @@ int readLineData(string name, int monthNum, string companyName,int funNo) {
 			else if(funNo == 3) {
 				getDataForDailyWageSort(line, monthNum, companyName, map);
 			}
+			else if(funNo == 4){
+				getDataOnWageRateSort(line, wageRate, map);
+			}
       }
       fileStream.close();
-  	}
-  	if(funNo == 2|| funNo ==3) {
+   }
+	  
+  	if(funNo == 2|| funNo == 3 || funNo == 4) {
 		sort(map);
 		return 0;
   	}
 	return totalWages;
+	  
 }
 
-
 int calcMonthlyWage(string name, int monthNum, string companyName) {
-	return readLineData(name, monthNum, companyName,1);
+	return readLineData(name, monthNum, companyName,1,0);
 }
 
 void sortByMonthlyWage(string companyName) {
-	  readLineData("0", 0, companyName,2);
+	  readLineData("0", 0, companyName,2, 0);
 }
 
 void sortByDailyWage(int month, string companyName){
-		readLineData("0", month, companyName, 3);
+		readLineData("0", month, companyName, 3, 0);
 }
+
+void  getEmpByWageRate(int wageRate) {
+		readLineData("0", 0, "0", 4, wageRate);
+}
+
 int main() {
 	remove("DailyAndTotal.txt");
 	remove("WageRecords.txt");
@@ -235,12 +273,13 @@ int main() {
 
 
 	int option;
+	cout<< "\n\n\n";
 	cout << "\n-------------------OPTION-------------------------";
 	cout << "\n| 1) get wage for selected Month =                 |";
 	cout << "\n| 2) get total wage                                |";
 	cout << "\n| 3) Sort By monthly Wage                          |";
 	cout << "\n| 4) Sort By dailyWage                             |";
-   cout << "\n| 5) Find Employees based on Wage                  |";
+   cout << "\n| 5) Find Employees based on Wage rate             |";
 	cout << "\n--------------------------------------------------";
 	cout << "\n\n\n Enter Option = ";
 	cin >> option;
@@ -296,18 +335,26 @@ int main() {
 		}
 		case 4:{
 			int month;
-			string companyName;
+			string companyName="d";
 
-			cout << "\n Enter CompanyName = ";
-         cin >> companyName;
 			cout<<"\n Enter Month Number = ";
 			cin >> month;
 
 			sortByDailyWage(month,companyName);
 			break;
 		}
+		case 5 :{
+			int wageRate;
+
+			cout << "Enter Wage Rate = ";
+			cin >> wageRate;
+
+			 getEmpByWageRate(wageRate);
+			 break;
+		}
 		default :{
 			cout << "Enter Valid option";
+			break;
 		}
 	}
 }
