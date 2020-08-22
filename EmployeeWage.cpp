@@ -14,20 +14,20 @@ struct CompanyEmpWage{
 
 void saveDailyWage(int wage, int totalWage, int month, string name, string company) {
    fstream fileStream;
-   fileStream.open("DailyAndTotal.txt", ios::out | ios::app);
+   fileStream.open("DailyAndTotal.csv", ios::out | ios::app);
 
    if(fileStream.is_open()) {
-      fileStream << wage << " " << totalWage << " " << month << " " << name << " " << company << endl;
+      fileStream << wage << "," << totalWage << "," << month << "," << name << "," << company << endl;
       fileStream.close();
    }
 }
 
 void saveWage(int wage, int month, string name, string company,int dailyWage,int wageRate) {
 	fstream fileStream;
-	fileStream.open("WageRecords.txt", ios::out | ios::app);
+	fileStream.open("WageRecords.csv", ios::out | ios::app);
 
    if(fileStream.is_open()) {
-      fileStream << wage << " " << month << " " << name << " " << company << " " << dailyWage << " "<< wageRate << endl;
+      fileStream << wage << "," << month << "," << name << "," << company << "," << dailyWage << ","<< wageRate << endl;
 		cout <<" \n \n " << " WAGE = " <<wage << " MONTH = " << month << " NAME = " << name << " Company = "<< company << " DailyWage = "
 		 << dailyWage << " WageRate = " << wageRate;
       fileStream.close();
@@ -80,7 +80,7 @@ int calculateWages(string line , string name, int monthNum, string companyName) 
 
    for (auto x : line)
    {
-       if (x == ' ')
+       if (x == ',')
        {
          words[counter] = word;
          counter++;
@@ -95,11 +95,9 @@ int calculateWages(string line , string name, int monthNum, string companyName) 
    words[counter] = word;
 
 	if(name == words[2] && monthNum == stoi(words[1]) && companyName == words[3]) {
-		cout <<"sss";
 		return stoi(words[0]);
 	}
 	else if(companyName == words[3] && monthNum == 0){
-		cout <<"dd";
 		return stoi(words[0]);
 	}
 	return 0;
@@ -112,7 +110,7 @@ int getDataForSort(string line ,map<string, int> &map1) {
 
    for (auto x : line)
    {
-       if (x == ' ')
+       if (x == ',')
        {
          words[counter] = word;
          counter++;
@@ -136,7 +134,7 @@ int getDataForDailyWageSort(string line ,int month,map<string, int> &map1) {
 
    for (auto x : line)
    {
-       if (x == ' ')
+       if (x == ',')
        {
          words[counter] = word;
          counter++;
@@ -163,7 +161,7 @@ int getDataOnWageRateSort(string line , int wageRate, map<string, int> &map1) {
 
    for (auto x : line)
    {
-       if (x == ' ')
+       if (x == ',')
        {
          words[counter] = word;
          counter++;
@@ -210,7 +208,7 @@ int readLineData(string name, int monthNum, string companyName, int funNo, int w
 	string line;
    int totalWages = 0;
    map<string, int> map;
-   fstream fileStream("WageRecords.txt", ios::in);
+   fstream fileStream("WageRecords.csv", ios::in);
 
    if(fileStream.is_open()) {
 
@@ -259,8 +257,8 @@ void  getEmpByWageRate(int wageRate) {
 }
 
 int main() {
-	remove("DailyAndTotal.txt");
-	remove("WageRecords.txt");
+	remove("DailyAndTotal.csv");
+	remove("WageRecords.csv");
 
 	struct CompanyEmpWage emp[5];
 	//EmployeeName--month--company--Wage--WorkingDays--MonthlyHours
