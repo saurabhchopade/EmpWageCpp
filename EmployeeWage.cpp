@@ -29,7 +29,7 @@ void saveWage(int wage, int month, string name, string company,int dailyWage,int
 
    if(fileStream.is_open()) {
       fileStream << wage << "," << month << "," << name << "," << company << "," << dailyWage << ","<< wageRate << endl;
-		cout <<" \n \n " << " WAGE = " <<wage << " MONTH = " << month << " NAME = " << name << " Company = "<< company << " DailyWage = "
+		cout <<"\n \n " << " WAGE = " <<wage << " MONTH = " << month << " NAME = " << name << " Company = "<< company << " DailyWage = "
 		 << dailyWage << " WageRate = " << wageRate;
       fileStream.close();
   	}
@@ -247,11 +247,11 @@ int readLineData(string name, int monthNum, string companyName, int funNo, int w
 }
 
 int calcMonthlyWage(string name, int monthNum, string companyName) {
-	return readLineData(name, monthNum, companyName,1,0);
+	return readLineData(name, monthNum, companyName, 1, 0);
 }
 
 void sortByMonthlyWage() {
-	  readLineData("0", 0, "0",2, 0);
+	  readLineData("0", 0, "0", 2, 0);
 }
 
 void sortByDailyWage(int month){
@@ -281,29 +281,30 @@ int main() {
 	empWageBuilder(emp[3]);
    empWageBuilder(emp[4]);
 
-
 	int option;
 	cout<< "\n\n\n";
-	cout << "\n-------------------OPTION-------------------------";
-	cout << "\n| 1) get wage for selected Month =                 |";
-	cout << "\n| 2) get total wage                                |";
+	cout << "\n-------------------F E A T U R E S------------------";
+	cout << "\n| 1) Get wage for selected Month 	           |";
+	cout << "\n| 2) Get total wage by company                     |";
 	cout << "\n| 3) Sort By monthly Wage                          |";
 	cout << "\n| 4) Sort By dailyWage                             |";
    cout << "\n| 5) Find Employees based on Wage rate             |";
 	cout << "\n--------------------------------------------------";
 	cout << "\n\n\n Enter Option = ";
 	cin >> option;
-	switch(option) {
 
+	switch(option) {
 		case 1:{
 			char check;
 			string name;
 			string companyName;
+
 			cout << "\n Enter Employee Name = ";
          cin >> name;
          cout << "\n Enter CompanyName = ";
 			cin >> companyName;
 			int totalWages = 0;
+
 			do {
 				int monthNum;
 				cout << "\n Enter Month Number = ";
@@ -339,7 +340,6 @@ int main() {
 
 			cout<<"\n Enter Month Number = ";
 			cin >> month;
-
 			sortByDailyWage(month);
 			break;
 		}
@@ -348,9 +348,8 @@ int main() {
 
 			cout << "Enter Wage Rate = ";
 			cin >> wageRate;
-
-			 getEmpByWageRate(wageRate);
-			 break;
+			getEmpByWageRate(wageRate);
+			break;
 		}
 		default :{
 			cout << "Enter Valid option";
