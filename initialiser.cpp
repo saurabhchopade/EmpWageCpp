@@ -4,7 +4,7 @@ namespace init{
    	f.open("DailyAndTotal.csv", std::ios::out | std::ios::app);
 
    	if(f.is_open()) {
-      	f << "WAGE" << "," << "TOTALWAGE" << "," << "MONTH" << "," << "EMPNAME" << "," << "COMPANY" << std::endl;
+      	f << "DAY"<<","<<"WAGE" << "," << "TOTALWAGE" << "," << "MONTH" << "," << "EMPNAME" << "," << "COMPANY" << std::endl;
       	f.close();
    	}
 	}

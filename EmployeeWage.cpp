@@ -13,12 +13,12 @@ struct CompanyEmpWage{
 	int monthlyHrs;
 };
 
-void saveDailyWage(int wage, int totalWage, int month, string name, string company) {
+void saveDailyWage(int day,int wage, int totalWage, int month, string name, string company) {
    fstream fileStream;
    fileStream.open("DailyAndTotal.csv", ios::out | ios::app);
 
    if(fileStream.is_open()) {
-      fileStream << wage << "," << totalWage << "," << month << "," << name << "," << company << endl;
+      fileStream << day <<","<< wage << "," << totalWage << "," << month << "," << name << "," << company << endl;
       fileStream.close();
    }
 }
@@ -63,7 +63,7 @@ int  empWageBuilder(CompanyEmpWage emp) {
 		totalWage += dailyWage;
 		totalWorkHours += hour;
 
-		saveDailyWage(dailyWage, totalWage, emp.month, emp.empName, emp.companyName);
+		saveDailyWage(day,dailyWage, totalWage, emp.month, emp.empName, emp.companyName);
 
 		if(totalWorkHours == totalMonthHrs) {
       	saveWage(totalWage, emp.month, emp.empName, emp.companyName, dailyWage, emp.wage);
