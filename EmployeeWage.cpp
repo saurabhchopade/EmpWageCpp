@@ -1,6 +1,7 @@
 #include <iostream>
 #include <bits/stdc++.h>
 #include <fstream>
+#include "initialiser.cpp"
 using namespace std;
 
 struct CompanyEmpWage{
@@ -211,8 +212,13 @@ int readLineData(string name, int monthNum, string companyName, int funNo, int w
    fstream fileStream("WageRecords.csv", ios::in);
 
    if(fileStream.is_open()) {
-
+		int lineNo = 0;
     	while ( getline (fileStream, line) ) {
+
+		if(lineNo == 0 ){
+			lineNo++;
+			continue;
+		}
 
 		switch(funNo){
 			case 1:
@@ -259,7 +265,8 @@ void  getEmpByWageRate(int wageRate) {
 int main() {
 	remove("DailyAndTotal.csv");
 	remove("WageRecords.csv");
-
+	init :: file1();
+	init :: file2();
 	struct CompanyEmpWage emp[5];
 	//EmployeeName--month--company--Wage--WorkingDays--MonthlyHours
 	emp[0] = {"alice", 2, "Dmart", 20, 60, 48};
